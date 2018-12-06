@@ -1,3 +1,5 @@
+import Exceptions.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +10,8 @@ public class StudentRepo {
 
     public void add(Student s) {
         try {
-            validateName(s.getFirstName(), s.getLastName()); // TODO: Mai sunt necesare aici??
+            validateName(s.getFirstName());
+            validateName(s.getLastName());
             validateDateOfBirth(s.getDateOfBirth());
             validateGender(s.getGender());
             students.add(s);
@@ -17,7 +20,7 @@ public class StudentRepo {
         }
     }
 
-    public void delete(String id) { // TODO: "ID is empty" = ?
+    public void delete(String id) {
         try {
             validateId(id);
             for (Student s : students) {
@@ -31,27 +34,35 @@ public class StudentRepo {
         }
     }
 
-    public void listByAge(int age) {// TODO: age is not a number, age is negative - is it possible??
-                                    // TODO: Also, should we use Date class or is it ok with birthYear?
+    public void listByAge(int age) {
+        try {
+            validateAge(age);
+        } catch (InvalidAgeException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Students with the age of: " + age);
         for (Student s : students) {
             int studentAge = 2018 - s.getDateOfBirth();
-            try {
-                validateAge(studentAge);
-            } catch (InvalidAgeException e) {
-                System.out.println(e.getMessage());
-            }
             if (studentAge == age) {
                 System.out.println(s);
             }
         }
+        System.out.println("=================================================");
     }
 
-    public void listSortedByLastName() { //TODO: Exceptions - Any input but ID cannot be empty as it is asked for
-                                        //TODO: in Constructor of Student. Should we only use validateID??
+    public void listSortedByLastName() {
         Collections.sort(students, new NameComparator());
         System.out.println("Students listed by last name:");
         for (Student s : students) {
-            System.out.println(s);
+            try {
+                if (s.getId() == null) {
+                    throw new InvalidIdException("Please enter the ID for " + s.getFirstName() + " " + s.getLastName());
+                }
+                validateId(s.getId());
+                System.out.println(s);
+            } catch (InvalidIdException e) {
+                System.out.println(e.getMessage());
+            }
         }
         System.out.println("=================================================");
     }
@@ -60,13 +71,21 @@ public class StudentRepo {
         Collections.sort(students, new AgeComparator());
         System.out.println("Students listed by age:");
         for (Student s : students) {
-            System.out.println(s);
+            try {
+                if (s.getId() == null) {
+                    throw new InvalidIdException("Please enter the ID for " + s.getFirstName() + " " + s.getLastName());
+                }
+                validateId(s.getId());
+                System.out.println(s);
+            } catch (InvalidIdException e) {
+                System.out.println(e.getMessage());
+            }
         }
         System.out.println("=================================================");
     }
 
     public void listAll() {
-        System.out.println("Students:");
+        System.out.println("All students:");
         for (Student s : students) {
             System.out.println(s);
         }
@@ -74,7 +93,9 @@ public class StudentRepo {
     }
 
     public void validateAge(int age) throws InvalidAgeException {
-//TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (age < 0) {
+            throw new InvalidAgeException("Age cannot be a negative number.");
+        }
     }
 
     public void validateDateOfBirth(int dateOfBirth) throws IncorrectBirthYearException {
@@ -85,12 +106,9 @@ public class StudentRepo {
         }
     }
 
-    public void validateName(String firstName, String lastName) throws IncorrectNameException {
-        if (firstName == null) {
-            throw new IncorrectNameException("Please enter first name.");
-        }
-        if (lastName == null) {
-            throw new IncorrectNameException("Please enter last name.");
+    public void validateName(String name) throws IncorrectNameException {
+        if (name.length() == 0) {
+            throw new IncorrectNameException("Name field cannot be empty..");
         }
     }
 
@@ -102,6 +120,9 @@ public class StudentRepo {
     }
 
     public void validateId(String id) throws InvalidIdException {
+        if (id.length() == 0 || id.length() < 10) {
+            throw new InvalidIdException("The ID you have entered does not have the proper length.");
+        }
         boolean idFound = false;
         for (Student s : students) {
             if (s.getId() == id) {
