@@ -1,6 +1,8 @@
-package main;
+package main.model;
 
 import exceptions.*;
+import main.comparators.AgeComparator;
+import main.comparators.NameComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
