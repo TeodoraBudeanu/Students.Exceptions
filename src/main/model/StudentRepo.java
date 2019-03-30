@@ -28,7 +28,7 @@ public class StudentRepo {
         try {
             validateId(id);
             for (Student s : students) {
-                if (s.getId() == id) {
+                if (s.getId().equals(id)) {
                     students.remove(s);
                     break;
                 }
