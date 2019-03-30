@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 public class InvalidIdException extends Exception {
     public InvalidIdException(String errorMessage){

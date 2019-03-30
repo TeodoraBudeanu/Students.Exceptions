@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 public class InvalidGenderException extends  Exception {
     public InvalidGenderException(String errorMessage){
