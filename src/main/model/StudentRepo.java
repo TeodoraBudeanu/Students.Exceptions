@@ -4,6 +4,7 @@ import exceptions.*;
 import main.comparators.AgeComparator;
 import main.comparators.NameComparator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +47,7 @@ public class StudentRepo {
         }
         System.out.println("Students with the age of: " + age);
         for (Student s : students) {
-            int studentAge = 2018 - s.getDateOfBirth();
+            int studentAge = LocalDateTime.now().getYear() - s.getDateOfBirth();
             if (studentAge == age) {
                 System.out.println(s);
             }
