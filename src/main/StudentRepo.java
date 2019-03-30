@@ -1,4 +1,6 @@
-import Exceptions.*;
+package main;
+
+import exceptions.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
